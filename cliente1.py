@@ -1,6 +1,7 @@
 import json
 import socket
 from datetime import datetime
+from traceback import print_tb
 
 now = datetime.now()
 
@@ -42,7 +43,15 @@ UDPClientSocket.sendto(bytesToSend, serverAddressPort)
  
 msgFromServer = UDPClientSocket.recvfrom(bufferSize)
 
- 
-msg = "Mensagem do servidor: {}".format(msgFromServer[0].decode())
+#transformar message para string
+msgFromServer_tostring = msgFromServer[0].decode()
 
-print(msg)
+
+#transformar message para json
+json_server = json.loads(msgFromServer_tostring)
+
+print("\nMensagem recebida pelo servidor: " + json_server.get("received").get("timestamp_msg_original"))
+
+print("\nMensagem enviada ao servidor: " + json_server.get("received").get("timestamp_msg_resposta"))
+
+
