@@ -19,21 +19,20 @@ msgFromServer = "Ola cliente UDP"
 
 bytesToSend = str.encode(msgFromServer)
 
-# Create a datagram socket
+# criando o socket pra receber
 
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
-# Bind to address and ip
+# add o ip e a porta no socket
 
 UDPServerSocket.bind((localIP, localPort))
 
-print("UDP server up and listening")
+print("UDP server ouvindo")
 print("Servidor criado as: " + horario_criacao)
-
 
 json_envio = {}
 
-msg_para_client = 'teste'
+msg_para_client = 'Mensagem recebida!'
 
 # Listen for incoming datagrams
 
@@ -55,27 +54,29 @@ while(True):
     msg_em_string = message.decode()
     
     #transformar message para json
-    json_object = json.loads(msg_em_string)
+    json_client = json.loads(msg_em_string)
 
     #acessando o json
 
-    print("Mensagem do cliente: " + json_object.get("info_to_sent").get("msg"))
+        # print("\nMensagem do cliente: " + json_client.get("info_to_sent").get("msg"))
 
-    print("Agora: " + json_object.get("info_to_sent").get("timestamp"))
+        # print("\nAgora: " + json_client.get("info_to_sent").get("timestamp"))
 
-    print("Request recebido as: " + current_time)
+        # print("\nRequest recebido as: " + current_time)
 
+        # print("\nIP cliente: " + json_client.get("info_to_sent").get("ip_origem"))
 
+    print((json.dumps(json_client.get("info_to_sent"), indent= len(json_client.get("info_to_sent")))))
 
-    clientMsg = "Mensagem do cliente: {}".format(message)
+    print("\n")
 
-    clientIP  = "IP do cliente: {}".format(address)
+    clientMsg = json_client.get("info_to_sent").get("msg")
 
-    clientPort = (address[9:len(address)])
+    clientIP  = json_client.get("info_to_sent").get("ip_origem")
+
+    clientPort = json_client.get("info_to_sent").get("porta_origem")
     
-    print(clientIP)
-
-    time_client = 0
+    time_client = json_client.get("info_to_sent").get("timestamp")
 
     json_envio ['received'] = {'ip_origem': localIP, 
                                 'ip_destino': clientIP, 
@@ -84,12 +85,11 @@ while(True):
                                 'timestamp_msg_original': time_client, 
                                 'timestamp_msg_resposta': current_time,
                                 'mensagem_original': clientMsg,
-                                'msg': msg_para_client}
+                                'mensagem_servidor': msg_para_client}
 
 
     str_encoded = json.dumps(json_envio).encode(encoding = 'UTF-8')
 
-
-    # Sending a reply to client
+    # mandando de volta pro client
 
     UDPServerSocket.sendto(str_encoded, address)
