@@ -14,11 +14,11 @@ port = 20001
 
 serverAddressPort = (ip, port)
 
-json_envio = {}
-
 ip_dest = "127.0.0.1"
 
 port_dest = 20001
+
+json_envio = {}
 
 json_envio ['info_to_sent'] = {'ip_origem': ip, 
                             'ip_destino': ip_dest, 
@@ -27,8 +27,7 @@ json_envio ['info_to_sent'] = {'ip_origem': ip,
                             'timestamp': current_time, 
                             'msg': msgFromClient}
 
-bytesToSend = str.encode(json.dumps(json_envio));
-
+bytesToSend = str.encode(json.dumps(json_envio))
 
 bufferSize = 1024
 
@@ -44,6 +43,6 @@ UDPClientSocket.sendto(bytesToSend, serverAddressPort)
 msgFromServer = UDPClientSocket.recvfrom(bufferSize)
 
  
-msg = "Mensagem do servidor: {}".format(msgFromServer[0])
+msg = "Mensagem do servidor: {}".format(msgFromServer[0].decode())
 
 print(msg)
