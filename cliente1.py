@@ -32,26 +32,31 @@ bytesToSend = str.encode(json.dumps(json_envio))
 
 bufferSize = 1024
 
-# Create a UDP socket at client side
+#criando o udp socket do client
 
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
-# Send to server using created UDP socket
+#mandando para o servidor usando udp socket
 
 UDPClientSocket.sendto(bytesToSend, serverAddressPort)
-
  
 msgFromServer = UDPClientSocket.recvfrom(bufferSize)
 
 #transformar message para string
 msgFromServer_tostring = msgFromServer[0].decode()
 
-
 #transformar message para json
 json_server = json.loads(msgFromServer_tostring)
 
-print("\nMensagem recebida pelo servidor: " + json_server.get("received").get("timestamp_msg_original"))
+# print("\nMensagem recebida pelo servidor as: " + json_server.get("received").get("timestamp_msg_original"))
 
-print("\nMensagem enviada ao servidor: " + json_server.get("received").get("timestamp_msg_resposta"))
+# print("\nMensagem enviada ao servidor as: " + json_server.get("received").get("timestamp_msg_resposta"))
 
+# print("\nMensagem: " + json_server.get("received").get("mensagem_servidor"))
+
+# printando o json inteiro recebido
+
+print((json.dumps(json_server.get("received"), indent= len(json_server.get("received")))))
+
+print("\n")
 
