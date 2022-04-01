@@ -1,2 +1,9 @@
-# trabalho_1_redes
+# Trabalho 1 - Redes
+
+<h4>
+  Feito para a disciplina de Redes A.
+</h4>
+
+*@github.com/CesarPinardi*
+*@github.com/fabiodumont*
 
