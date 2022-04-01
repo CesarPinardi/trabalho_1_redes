@@ -9,15 +9,11 @@ now = datetime.now()
 
 horario_criacao = now.strftime("%H:%M:%S")
 
-localIP = "127.0.0.1"
+localIP = "192.168.0.10"
 
 localPort = 20001
 
 bufferSize = 1024
-
-msgFromServer = "Ola cliente UDP"
-
-bytesToSend = str.encode(msgFromServer)
 
 # criando o socket pra receber
 
@@ -31,8 +27,8 @@ print("UDP server ouvindo")
 print("Servidor criado as: " + horario_criacao)
 
 json_envio = {}
+json_server = {}
 
-msg_para_client = 'Mensagem recebida!'
 
 # Listen for incoming datagrams
 
@@ -58,14 +54,6 @@ while(True):
 
     #acessando o json
 
-        # print("\nMensagem do cliente: " + json_client.get("info_to_sent").get("msg"))
-
-        # print("\nAgora: " + json_client.get("info_to_sent").get("timestamp"))
-
-        # print("\nRequest recebido as: " + current_time)
-
-        # print("\nIP cliente: " + json_client.get("info_to_sent").get("ip_origem"))
-
     print((json.dumps(json_client.get("info_to_sent"), indent= len(json_client.get("info_to_sent")))))
 
     print("\n")
@@ -78,18 +66,48 @@ while(True):
     
     time_client = json_client.get("info_to_sent").get("timestamp")
 
+
     json_envio ['received'] = {'ip_origem': localIP, 
                                 'ip_destino': clientIP, 
                                 'porta_origem': localPort, 
                                 'porta_destino': clientPort, 
                                 'timestamp_msg_original': time_client, 
                                 'timestamp_msg_resposta': current_time,
-                                'mensagem_original': clientMsg,
-                                'mensagem_servidor': msg_para_client}
+                                'ACK': "true"}
+
 
 
     str_encoded = json.dumps(json_envio).encode(encoding = 'UTF-8')
 
     # mandando de volta pro client
-
     UDPServerSocket.sendto(str_encoded, address)
+
+    msgFromServer = input("Mensagem para o cliente: ")
+
+    json_server ['send'] = {'ip_origem': localIP, 
+                             'ip_destino': clientIP, 
+                             'porta_origem': localPort, 
+                             'porta_destino': clientPort, 
+                             'timestamp_msg_original': time_client, 
+                             'timestamp_msg_resposta': current_time,
+                             'msg_client': clientMsg,
+                             'msg_server': msgFromServer}
+
+    str_server = json.dumps(json_server).encode(encoding = 'UTF-8')
+
+    bytesClient = str.encode(json.dumps(json_server))
+
+
+
+    bufferSize = 1024
+
+    #criando o udp socket do client
+
+    UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+    clientAddressPort = (clientIP, clientPort)
+    #mandando para o servidor usando udp socket
+
+    UDPClientSocket.sendto(bytesClient, clientAddressPort)
+    
+
+
