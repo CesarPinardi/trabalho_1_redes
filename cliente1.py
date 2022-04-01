@@ -2,20 +2,21 @@ import json
 import socket
 from datetime import datetime
 from traceback import print_tb
+import time
 
 now = datetime.now()
 
 current_time = now.strftime("%H:%M:%S")
 
-msgFromClient = input("Mensagem para o servidor: ")
+ip_dest = input("IP do servidor: ")
 
-ip = "127.0.0.1"
+msgFromClient = input("Mensagem para o servidor: ")
 
 port = 20001
 
-serverAddressPort = (ip, port)
+ip = "192.168.0.11"
 
-ip_dest = "127.0.0.1"
+serverAddressPort = (ip_dest, port)
 
 port_dest = 20001
 
@@ -48,15 +49,22 @@ msgFromServer_tostring = msgFromServer[0].decode()
 #transformar message para json
 json_server = json.loads(msgFromServer_tostring)
 
-# print("\nMensagem recebida pelo servidor as: " + json_server.get("received").get("timestamp_msg_original"))
-
-# print("\nMensagem enviada ao servidor as: " + json_server.get("received").get("timestamp_msg_resposta"))
-
-# print("\nMensagem: " + json_server.get("received").get("mensagem_servidor"))
-
-# printando o json inteiro recebido
 
 print((json.dumps(json_server.get("received"), indent= len(json_server.get("received")))))
+ack = json_server.get("received").get("ACK")
+print(ack)
+
+# como pegar outro JSON no mesmo request
+while time.sleep(10):
+    if ack == "true":
+
+        print("Mensagem esperando servidor: ")
+
+
+        print((json.dumps(json_server.get("send"), indent= len(json_server.get("send")))))
+
+
+
 
 print("\n")
 
