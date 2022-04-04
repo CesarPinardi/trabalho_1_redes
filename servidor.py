@@ -9,7 +9,7 @@ now = datetime.now()
 
 horario_criacao = now.strftime("%H:%M:%S")
 
-localIP = "127.0.0.1"
+localIP = "192.168.0.10"
 
 localPort = 20001
 
